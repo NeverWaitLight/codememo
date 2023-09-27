@@ -6,12 +6,13 @@
 
     <parent>
         <groupId>org.waitlight.codememo</groupId>
-        <artifactId>seata-demo</artifactId>
+        <artifactId>seata</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.waitlight.codememo.seata</groupId>
     <artifactId>commons</artifactId>
+    <packaging>jar</packaging>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
