@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package xyz.demo.flink;
+package org.waitlight.codememo.flink;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.typeinfo.Types;
