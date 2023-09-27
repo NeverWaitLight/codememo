@@ -1,4 +1,4 @@
-package org.waitlight.codememo.utils.office.excel;
+package org.waitlight.codememo.utils.file.excel;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

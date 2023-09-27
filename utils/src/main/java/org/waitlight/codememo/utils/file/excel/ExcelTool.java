@@ -1,4 +1,4 @@
-package org.waitlight.codememo.utils.office.excel;
+package org.waitlight.codememo.utils.file.excel;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
