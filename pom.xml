@@ -10,9 +10,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>flink-demo</module>
+        <module>flink-client</module>
         <module>seata-demo</module>
-        <module>spring-websocket-without-stomp-master</module>
+        <module>spring-websocket-without-stomp</module>
         <module>utils</module>
     </modules>
 
