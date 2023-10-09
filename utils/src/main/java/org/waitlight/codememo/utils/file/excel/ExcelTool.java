@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -31,13 +32,9 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-
-/**
- * 实例化是为了使用 {@link ConversionService}
- */
 @Slf4j
 @AllArgsConstructor
-public class ExcelTool {
+public class ExcelTool implements Excels {
 
     private static final ConcurrentHashMap<Class<?>, List<CellHandler>> SETTER_CACHE = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<Class<?>, List<CellHandler>> GETTER_CACHE = new ConcurrentHashMap<>();
@@ -45,6 +42,7 @@ public class ExcelTool {
     private final ConversionService conversionService;
     private final ResourceLoader resourceLoader;
 
+    @Override
     public <T> Workbook write(String templateFileName, int startRowNum, Class<?> klass, List<T> data) throws IOException {
         Resource resource = resourceLoader.getResource(templateFileName);
         Workbook workbook = WorkbookFactory.create(resource.getInputStream());
@@ -56,64 +54,87 @@ public class ExcelTool {
         return workbook;
     }
 
+    @Override
     public <T> void write(Workbook workbook, int startRowNum, Class<?> klass, List<T> data) {
         if (CollectionUtils.isEmpty(data)) return;
         List<CellHandler> cellHandlers = takeGetters(klass);
 
         Sheet sheet = workbook.getSheetAt(0);
         if (CollectionUtils.isEmpty(data)) return;
-        writeContent(sheet, startRowNum, data, cellHandlers);
+        writeSheet(sheet, startRowNum, data, cellHandlers);
     }
 
-    private <T> void writeContent(Sheet sheet, int startRowNum, List<T> objects, List<CellHandler> cellHandlers) {
+    private <T> void writeSheet(Sheet sheet, int startRowNum, List<T> objects, List<CellHandler> cellHandlers) {
         for (int i = 0; i < objects.size(); i++) {
             T obj = objects.get(i);
             Row row = sheet.createRow(i + startRowNum);
-            for (int cellnum = 0; cellnum < cellHandlers.size(); cellnum++) {
-                Cell cell = row.createCell(cellnum);
-                Method method = cellHandlers.get(cellnum).getMethod();
-                Object value = null;
-                try {
-                    value = method.invoke(obj);
-                } catch (Exception e) {
-                    log.error("Failed to invoke method", e);
-                }
-
-                if (Objects.isNull(value)) continue;
-                Class<?> valueKlass = value.getClass();
-                if (String.class.isAssignableFrom(valueKlass)) {
-                    cell.setCellValue(String.valueOf(value));
-                } else if (Boolean.class.isAssignableFrom(valueKlass)) {
-                    cell.setCellValue(Boolean.TRUE.equals(value) ? "是" : "否");
-                } else if (Date.class.isAssignableFrom(valueKlass)) {
-                    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-                    String format = dateTimeFormatter.format(((Date) value).toInstant());
-                    cell.setCellValue(format);
-                } else {
-                    cell.setCellValue(conversionService.convert(value, String.class));
-                }
-            }
+            writeRow(row, obj, cellHandlers);
         }
     }
 
-    public <T> List<T> read(Workbook workbook, int startRowNum, Class<T> klass) {
+    private <T> void writeRow(Row row, T obj, List<CellHandler> cellHandlers) {
+        for (int cellNum = 0; cellNum < cellHandlers.size(); cellNum++) {
+            Cell cell = row.createCell(cellNum);
+            Method method = cellHandlers.get(cellNum).getMethod();
+            Object value = null;
+            try {
+                value = method.invoke(obj);
+            } catch (Exception e) {
+                log.error("Failed to invoke method", e);
+            }
+
+            if (Objects.isNull(value)) {
+                continue;
+            }
+
+            writeCell(cell, value);
+        }
+    }
+
+    private void writeCell(Cell cell, Object value) {
+        Class<?> valueKlass = value.getClass();
+        if (String.class.isAssignableFrom(valueKlass)) {
+            cell.setCellValue(String.valueOf(value));
+            return;
+        }
+        if (Boolean.class.isAssignableFrom(valueKlass)) {
+            cell.setCellValue(Boolean.TRUE.equals(value) ? "是" : "否");
+            return;
+        }
+        if (Date.class.isAssignableFrom(valueKlass)) {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            String format = dateTimeFormatter.format(((Date) value).toInstant());
+            cell.setCellValue(format);
+            return;
+        }
+        cell.setCellValue(conversionService.convert(value, String.class));
+    }
+
+    @Override
+    public <T> List<T> read(Workbook workbook, int startRowNum, Class<T> klass, Pair<Integer, Integer> cellNumRange) {
         Objects.requireNonNull(workbook);
         Objects.requireNonNull(klass);
 
         List<CellHandler> cellHandlers = takeSetters(klass);
 
         Sheet sheet = workbook.getSheetAt(0);
-        if (Objects.isNull(sheet)) throw new RuntimeException("没有可用sheet");
-        return readSheet(startRowNum, sheet, klass, cellHandlers);
+        if (Objects.isNull(sheet)) {
+            throw new RuntimeException("没有可用sheet");
+        }
+        return readSheet(startRowNum, sheet, klass, cellHandlers, cellNumRange);
     }
 
-    private <T> List<T> readSheet(int startRowNum, Sheet sheet, Class<T> klass, List<CellHandler> setters) {
+    private <T> List<T> readSheet(int startRowNum,
+                                  Sheet sheet,
+                                  Class<T> klass,
+                                  List<CellHandler> setters,
+                                  Pair<Integer, Integer> cellNumRange) {
         if (Objects.isNull(sheet)) return new ArrayList<>();
 
         List<T> data = new ArrayList<>();
         for (int i = 0; i <= sheet.getLastRowNum(); i++) {
-            int rownum = i + startRowNum;
-            Row row = sheet.getRow(rownum);
+            int rowNum = i + startRowNum;
+            Row row = sheet.getRow(rowNum);
             if (Objects.isNull(row)) continue;
 
             T datum;
@@ -124,7 +145,7 @@ public class ExcelTool {
                 throw new RuntimeException("Not found no-arg-constructor in " + klass.getName(), e);
             }
 
-            if (isNotRowEmpty(row) && readRow(datum, row, setters)) {
+            if (isNotRowEmpty(row) && readRow(datum, row, setters, cellNumRange)) {
                 data.add(datum);
             }
         }
@@ -141,18 +162,35 @@ public class ExcelTool {
         return false;
     }
 
-    private <T> boolean readRow(T datum, Row row, List<CellHandler> cellHandlers) {
+    private <T> boolean readRow(T datum,
+                                Row row,
+                                List<CellHandler> cellHandlers,
+                                Pair<Integer, Integer> cellNumRange) {
         boolean hasValue = false;
-        for (int cellnum = 0; cellnum < row.getLastCellNum(); cellnum++) {
-            Cell cell = row.getCell(cellnum);
-            if (Objects.isNull(cell)) continue;
-            CellHandler cellHandler = cellHandlers.get(cellnum);
-            if (Objects.isNull(cellHandler)) continue;
+        int minCellNum = 0;
+        int maxCellNum = row.getLastCellNum();
+        if (Objects.nonNull(cellNumRange)) {
+            minCellNum = cellNumRange.getLeft();
+            maxCellNum = cellNumRange.getRight();
+        }
+
+        for (int cellNum = minCellNum; cellNum < maxCellNum; cellNum++) {
+            Cell cell = row.getCell(cellNum);
+            if (Objects.isNull(cell)) {
+                continue;
+            }
+            CellHandler cellHandler = cellHandlers.get(cellNum);
+            if (Objects.isNull(cellHandler)) {
+                continue;
+            }
             Method method = cellHandler.getMethod();
-            if (Objects.isNull(method) || !cellHandler.isCanImport()) continue;
+            if (Objects.isNull(method) || !cellHandler.isCanImport()) {
+                continue;
+            }
+
             try {
                 if (!readValue(cell, method, datum)) {
-                    log.info("Read cell: {}:{} raw value:{}, failed", row.getRowNum(), cellnum, cell.getStringCellValue());
+                    log.info("Read cell: {}:{} raw value:{}, failed", row.getRowNum(), cellNum, cell.getStringCellValue());
                 } else {
                     hasValue = true;
                 }
@@ -176,7 +214,7 @@ public class ExcelTool {
 
     private <T> boolean readValue(Cell cell, Method method, T datum) {
         if (!ObjectUtils.allNotNull(cell, method, datum)) return false;
-        String cellValue = getCellValueAsString(cell);
+        String cellValue = readCellValueAsString(cell);
         if (StringUtils.isBlank(cellValue)) return false;
 
         Class<?> valueType = method.getParameterTypes()[0];
@@ -195,7 +233,7 @@ public class ExcelTool {
         return false;
     }
 
-    private static String getCellValueAsString(Cell cell) {
+    private static String readCellValueAsString(Cell cell) {
         CellType cellType = cell.getCellType();
         String val = "";
 

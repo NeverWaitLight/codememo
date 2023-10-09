@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.waitlight</groupId>
-    <artifactId>codememo</artifactId>
+    <artifactId>code-memo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
@@ -14,6 +14,7 @@
         <module>seata</module>
         <module>spring-websocket-without-stomp</module>
         <module>utils</module>
+        <module>commons</module>
     </modules>
 
 </project>

@@ -13,8 +13,8 @@
 
 # Demo
 
-- [XA](xa/README.md)
-- [AT](at/README.md)
-- [TCC](tcc/README.md)
+- [XA](seata-xa/README.md)
+- [AT](seata-at/README.md)
+- [TCC](seata-tcc/README.md)
 
 > [setata-server 高可用部署方案](https://seata.io/zh-cn/blog/seata-ha-practice.html)
