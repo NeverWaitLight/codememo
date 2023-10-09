@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>org.waitlight.codememo</groupId>
-        <artifactId>seata</artifactId>
+        <artifactId>seata-demo</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 

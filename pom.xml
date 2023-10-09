@@ -10,10 +10,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>flink</module>
-        <module>seata</module>
+        <module>flink-demo</module>
+        <module>seata-demo</module>
         <module>spring-websocket-without-stomp</module>
-        <module>utils</module>
+        <module>office-utils</module>
         <module>commons</module>
     </modules>
 
