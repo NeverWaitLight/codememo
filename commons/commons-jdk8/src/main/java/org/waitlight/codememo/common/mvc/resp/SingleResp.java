@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class SingleResp<T> extends AbstractResp {
+public class SingleResp<T> extends Resp {
 
     private T data;
 

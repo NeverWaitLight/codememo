@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class EmptyResp extends AbstractResp {
+public class EmptyResp extends Resp {
 
     public static EmptyResp success() {
         EmptyResp r = new EmptyResp();

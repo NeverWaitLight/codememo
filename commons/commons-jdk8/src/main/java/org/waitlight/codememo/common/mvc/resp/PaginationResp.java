@@ -10,18 +10,15 @@ import java.util.Objects;
 
 @Setter
 @Getter
-public class PaginationResp<T> extends AbstractResp {
+public class PaginationResp<T> extends Resp {
     private long page;
     private long perPage;
 
-    private long count;
+    private long total;
+    private long totalPage;
     private List<T> data = Collections.emptyList();
 
     private PaginationResp() {
-    }
-
-    public long getTotalPage() {
-        return count / perPage + (count % perPage > 0L ? 1L : 0L);
     }
 
     public static <T> PaginationResp<T> success(PaginationQuery query) {
@@ -39,9 +36,12 @@ public class PaginationResp<T> extends AbstractResp {
 
         resp.page = query.getPage();
         resp.perPage = query.getPerPage();
-        resp.count = total;
+        resp.total = total;
         resp.setData(data);
         return resp;
     }
 
+    public long getTotalPage() {
+        return (getTotal() / getPerPage()) + (getTotal() % getPerPage() > 0L ? 1L : 0L);
+    }
 }

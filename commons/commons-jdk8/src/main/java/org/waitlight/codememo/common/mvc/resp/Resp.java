@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public abstract class AbstractResp {
+public abstract class Resp {
     public static final long DEF_SUCCESS_CODE = 0L;
     public static final String DEF_SUCCESS_MESSAGE = "success";
 
