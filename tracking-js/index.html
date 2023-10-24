@@ -18,6 +18,12 @@
             top: 100;
             left: 100;
         }
+
+        #snapshotCanvas {
+            position: absolute;
+            top: 300;
+            left: 300;
+        }
     </style>
 </head>
 
@@ -27,6 +33,8 @@
     <video id="video" width="640" height="480" autoplay></video>
     <!-- 显示拍摄的照片 -->
     <canvas id="canvas" width="640" height="480"></canvas>
+
+    <canvas id="snapshotCanvas" width="320" height="240"></canvas>
 
     <script>
         // 获取 video 元素和 canvas 元素
@@ -52,9 +60,24 @@
         // 监听人脸检测到事件
         tracker.on('track', function (event) {
             context.clearRect(0, 0, canvas.width, canvas.height);
+
             event.data.forEach(function (rect) {
                 context.strokeStyle = '#a64ceb';
                 context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                context.font = '11px Helvetica';
+                context.fillStyle = "#fff";
+                context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+                context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+
+
+                var snapshotContext = snapshotCanvas.getContext('2d');
+                //draw image to canvas. scale to target dimensions
+                snapshotContext.drawImage(video, 0, 0, 640, 480);
+
+                //convert to desired file format
+                var dataURI = snapshotCanvas.toDataURL('image/jpeg'); // can also use 'image/png'
+                //This dataURI is what you would use to get the actual image
+                console.log(dataURI);
             });
         });
     </script>
