@@ -58,6 +58,7 @@
         tracking.track('#video', tracker, { camera: true });
 
         // 监听人脸检测到事件
+        // Source blog: https://stackoverflow.com/questions/33885457/adding-auto-capture-on-face-detection-using-tracking-js
         tracker.on('track', function (event) {
             context.clearRect(0, 0, canvas.width, canvas.height);
 
