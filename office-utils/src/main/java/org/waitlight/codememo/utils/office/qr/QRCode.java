@@ -3,11 +3,13 @@ package org.waitlight.codememo.utils.office.qr;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class QRCode {
 
@@ -32,8 +35,7 @@ public class QRCode {
     public static final int LOGO_Y = QR_CODE_H / 5 * 2;
     public static final int LOGO_W = QR_CODE_W / 5;
     public static final int LOGO_H = QR_CODE_H / 5;
-
-    public static final int LOGO_BORDER_LINE_WIDTH = 1;
+    public static final int  = QR_CODE_H / 5;
 
     public static final int SUMMARY_BORDER_X = 10;
     public static final int SUMMARY_BORDER_Y = QR_CODE_H + 10;
@@ -45,60 +47,71 @@ public class QRCode {
     public static final int SUMMARY_FONT_WEIGHT = 64;
     public static final int ORG_FONT_WEIGHT = 18;
 
+    public static final String DEF_FONT_NAME = "WenQuanYi Zen Hei";
 
-    private final String content;
+
+    private final int margin = 50;
+    private final Color backgroudColor = new Color(244, 244, 244);
+
+    private final String contents;
     private final String logo;
     private final String summary;
     private final String org;
 
+    private Graphics2D g2d;
     private BufferedImage image;
 
     private QRCode() {
-        this.content = null;
+        this.contents = null;
         this.logo = null;
         this.summary = null;
         this.org = null;
     }
 
-    public QRCode(String content, String logo) throws IOException, WriterException {
-        this.content = content;
-        this.logo = logo;
+    public QRCode(String contents, String logo) {
+        this.contents = Validate.notBlank(contents);
+        this.logo = Validate.notBlank(logo);
         this.summary = null;
         this.org = null;
-        drawImage(content, logo, null, null);
     }
 
-    public QRCode(String content, String logo, String summary, String org) throws IOException, WriterException {
-        this.content = content;
-        this.logo = logo;
+    public QRCode(String contents, String logo, String summary, String org) {
+        this.contents = Validate.notBlank(contents);
+        this.logo = Validate.notBlank(logo);
         this.summary = summary;
         this.org = org;
-        drawImage(content, logo, summary, org);
     }
 
-    public void drawImage(String content, String logo, String summary, String org) throws WriterException, IOException {
-        if (StringUtils.isAnyBlank(summary, org)) {
+    public QRCode draw() throws WriterException, IOException {
+        if (StringUtils.isBlank(summary)) {
             image = new BufferedImage(QR_CODE_W, QR_CODE_H, BufferedImage.TYPE_INT_RGB);
         } else {
             image = new BufferedImage(IMG_W, IMG_H, BufferedImage.TYPE_INT_RGB);
         }
 
-        Graphics2D g2d = image.createGraphics();
-        g2d.setColor(Color.WHITE);
+        if (Objects.isNull(g2d)) {
+            g2d = image.createGraphics();
+        }
+
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        g2d.setColor(backgroudColor);
         g2d.fillRect(0, 0, IMG_W, IMG_H);
 
-        drawQrCode(g2d, content, logo);
+        drawQrCode();
         drawSummary(g2d, summary, org);
 
         g2d.dispose();
         image.flush();
+
+        return this;
     }
 
     public void toPng(String outputPath) throws IOException {
         if (StringUtils.isBlank(summary)) {
             ImageIO.write(image, "png", new File(outputPath + "/" + System.currentTimeMillis() + ".png"));
         } else {
-            ImageIO.write(image, "png", new File(outputPath + "/" + summary + System.currentTimeMillis() + ".png"));
+            ImageIO.write(image, "png", new File(outputPath + "/" + summary + ".png"));
         }
     }
 
@@ -108,31 +121,33 @@ public class QRCode {
         return os;
     }
 
-    private void drawQrCode(Graphics2D g2d, String qrCode, String logo) throws WriterException, IOException {
-        drawQrCode(g2d, qrCode);
-        drawLogo(g2d, logo);
-    }
-
-    private void drawQrCode(Graphics2D g2d, String qrCode) throws WriterException {
+    private void drawQrCode() throws WriterException, IOException {
         Map<EncodeHintType, Object> hints = new HashMap<>();
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
         hints.put(EncodeHintType.MARGIN, 0);
 
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = qrCodeWriter.encode(qrCode, BarcodeFormat.QR_CODE, QR_CODE_W, QR_CODE_H, hints);
-        BufferedImage qrBufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
-        g2d.drawImage(qrBufferedImage, 0, 0, QR_CODE_W, QR_CODE_H, null);
+        BitMatrix bitMatrix = qrCodeWriter.encode(contents, BarcodeFormat.QR_CODE, QR_CODE_W, QR_CODE_H, hints);
+        MatrixToImageConfig matrixToImageConfig = new MatrixToImageConfig(backgroudColor.getRGB(), Color.BLACK.getRGB());
+        BufferedImage qrBufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix, matrixToImageConfig);
+        g2d.drawImage(qrBufferedImage, margin, margin, QR_CODE_W - margin * 2, QR_CODE_H - margin * 2, null);
+
+        drawLogo(QR_CODE_W - margin * 2, QR_CODE_H - margin * 2);
     }
 
-    private void drawLogo(Graphics2D g2d, String logo) throws IOException {
+    private void drawLogo(int parentW, int parentH) throws IOException {
         if (StringUtils.isBlank(logo)) {
             return;
         }
 
+        int logoW= parentW;
+
         BufferedImage logoImage = ImageIO.read(new File(logo));
-        g2d.drawImage(logoImage, LOGO_X, LOGO_Y, LOGO_W, LOGO_H, null);
-        drawBorder(g2d, LOGO_BORDER_LINE_WIDTH, LOGO_X + 2d, LOGO_Y + 2d, LOGO_W - 4d, LOGO_H - 4d, 20d, 20d);
+        RoundRectangle2D roundRect = new RoundRectangle2D.Double(LOGO_X, LOGO_Y, LOGO_W, LOGO_H, 40, 40);
+        g2d.setClip(roundRect);
+        g2d.drawImage(logoImage, LOGO_X, LOGO_Y, (int) (parentW * 0.2d), (int) (parentH * 0.2d), null);
+        g2d.setClip(null);
     }
 
     private void drawSummary(Graphics2D g2d, String summary, String org) {
@@ -155,16 +170,21 @@ public class QRCode {
             return;
         }
 
-        Font font = new Font(Font.SERIF, Font.BOLD, SUMMARY_FONT_WEIGHT);
-        g2d.setFont(font);
-        g2d.setColor(Color.BLACK);
+        int textWidth;
+        int loop = 0;
+        FontMetrics metrics;
+        do {
+            Font font = new Font(DEF_FONT_NAME, Font.PLAIN, SUMMARY_FONT_WEIGHT - loop);
+            g2d.setFont(font);
+            g2d.setColor(Color.BLACK);
 
-        FontMetrics fontMetrics = g2d.getFontMetrics();
-        int textWidth = fontMetrics.stringWidth(summary);
-        int textHeight = fontMetrics.getHeight();
+            metrics = g2d.getFontMetrics();
+            textWidth = metrics.stringWidth(summary);
+            loop++;
+        } while (textWidth > SUMMARY_BORDER_W - 10);
 
         int x = (IMG_W - textWidth) / 2;
-        int y = IMG_H - textHeight;
+        int y = QR_CODE_H + SUMMARY_BORDER_H / 2 + metrics.getHeight() / 2 - metrics.getDescent() - 6;
         g2d.drawString(summary, x, y);
     }
 
