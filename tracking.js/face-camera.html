@@ -76,7 +76,6 @@
         // 监听人脸检测到事件
         // Source blog: https://stackoverflow.com/questions/33885457/adding-auto-capture-on-face-detection-using-tracking-js
         var context = canvas.getContext('2d');
-        var currentTime = new Date();
         tracker.on('track', function (event) {
             context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -89,13 +88,12 @@
                 console.log(`Original resolution: ${originalWidth}x${originalHeight}`);
             });
 
+            var currentTime = new Date();
             event.data.forEach(function (rect) {
-                context.strokeStyle = '#a64ceb';
+                context.strokeStyle = '#00ff00';
                 context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-                context.font = '11px Helvetica';
-                context.fillStyle = "#fff";
 
-                if (lastInsertTime == null || (currentTime - lastInsertTime) >= 5000) {
+                if (lastInsertTime == null || (currentTime - lastInsertTime) >= 3000) {
                     var snapshotContext = snapshotCanvas.getContext('2d');
                     snapshotContext.drawImage(video, rect.x, rect.y, rect.width, rect.height,
                         0, 0, snapshotCanvas.width, snapshotCanvas.height);
