@@ -24,7 +24,6 @@
 
         .preview-container {
             flex: 1;
-            margin-right: 10px;
         }
 
         .photos-container {
@@ -32,10 +31,6 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-        }
-
-        #photos img {
-            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -47,10 +42,10 @@
 
     <div class="container">
         <div class="preview-container">
-            <video id="video" width="320" height="240" preload autoplay loop muted></video>
-            <canvas id="canvas" width="320" height="240"></canvas>
+            <video id="video" width="640" height="480" preload autoplay loop muted></video>
+            <canvas id="canvas" width="640" height="480"></canvas>
         </div>
-        <canvas id="snapshotCanvas" width="320" height="240"></canvas>
+        <canvas id="snapshotCanvas" width="100" height="100"></canvas>
         <div class="photos-container">
             <div id="photos"></div>
         </div>
@@ -89,17 +84,13 @@
                 context.strokeRect(rect.x, rect.y, rect.width, rect.height);
                 context.font = '11px Helvetica';
                 context.fillStyle = "#fff";
-                context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
-                context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
 
                 var currentTime = new Date();
                 if (lastInsertTime == null || (currentTime - lastInsertTime) >= 5000) {
                     var snapshotContext = snapshotCanvas.getContext('2d');
-                    //draw image to canvas. scale to target dimensions
-                    snapshotContext.drawImage(video, 0, 0, 320, 240);
-
-                    //convert to desired file format
-                    var dataURI = snapshotCanvas.toDataURL('image/jpeg'); // can also use 'image/png'
+                    snapshotContext.drawImage(video, rect.x, rect.y, rect.width, rect.height,
+                        0, 0, snapshotCanvas.width, snapshotCanvas.height);
+                    var dataURI = snapshotCanvas.toDataURL('image/png');
                     var img = document.createElement('img');
                     img.src = dataURI;
                     photos.insertBefore(img, photos.firstChild);
