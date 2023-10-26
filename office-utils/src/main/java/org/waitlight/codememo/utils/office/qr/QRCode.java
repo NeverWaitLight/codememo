@@ -35,7 +35,6 @@ public class QRCode {
     public static final int LOGO_Y = QR_CODE_H / 5 * 2;
     public static final int LOGO_W = QR_CODE_W / 5;
     public static final int LOGO_H = QR_CODE_H / 5;
-    public static final int  = QR_CODE_H / 5;
 
     public static final int SUMMARY_BORDER_X = 10;
     public static final int SUMMARY_BORDER_Y = QR_CODE_H + 10;
@@ -141,7 +140,7 @@ public class QRCode {
             return;
         }
 
-        int logoW= parentW;
+        int logoW = parentW;
 
         BufferedImage logoImage = ImageIO.read(new File(logo));
         RoundRectangle2D roundRect = new RoundRectangle2D.Double(LOGO_X, LOGO_Y, LOGO_W, LOGO_H, 40, 40);

@@ -15,6 +15,7 @@
         <module>spring-websocket-without-stomp</module>
         <module>office-utils</module>
         <module>commons</module>
+        <module>local-server</module>
     </modules>
 
 </project>
