@@ -24,14 +24,6 @@ public class ZipUtil {
         throw new UnsupportedOperationException("This is a util class");
     }
 
-    public static void unzip(String zipPath, String destDir) throws IOException {
-        try {
-            unzip(zipPath, Charset.forName("GBK"), destDir);
-        } catch (Exception e) {
-            unzip(zipPath, StandardCharsets.UTF_8, destDir);
-        }
-    }
-
     public static void unzip(String zipPath, Charset charset, String destDir) throws IOException {
         InputStream in = Files.newInputStream(Paths.get(zipPath));
         unzip(in, charset, pair -> {
