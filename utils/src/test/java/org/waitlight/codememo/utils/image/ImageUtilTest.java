@@ -1,4 +1,4 @@
-package org.waitlight.codememo.utils.office.image;
+package org.waitlight.codememo.utils.image;
 
 import org.junit.jupiter.api.Test;
 

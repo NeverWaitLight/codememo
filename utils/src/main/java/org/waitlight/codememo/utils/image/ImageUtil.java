@@ -1,4 +1,4 @@
-package org.waitlight.codememo.utils.office.image;
+package org.waitlight.codememo.utils.image;
 
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.lang3.StringUtils;

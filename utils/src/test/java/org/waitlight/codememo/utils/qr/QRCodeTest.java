@@ -1,4 +1,4 @@
-package org.waitlight.codememo.utils.office.qr;
+package org.waitlight.codememo.utils.qr;
 
 
 import org.junit.jupiter.api.Test;

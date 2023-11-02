@@ -1,4 +1,4 @@
-package org.waitlight.codememo.utils.office;
+package org.waitlight.codememo.utils;
 
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
