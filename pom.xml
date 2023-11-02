@@ -13,8 +13,8 @@
         <module>flink-demo</module>
         <module>seata-demo</module>
         <module>spring-websocket-without-stomp</module>
-        <module>office-utils</module>
-        <module>commons</module>
+        <module>utils</module>
+        <module>design-pattern-demo</module>
         <module>local-server</module>
     </modules>
 

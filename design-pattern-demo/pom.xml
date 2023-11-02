@@ -8,12 +8,12 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>commons</artifactId>
+    <artifactId>design-pattern-demo</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>commons-jdk8</module>
-        <module>commons-jdk17</module>
+        <module>design-pattern-demo-jdk8</module>
+        <module>design-pattern-demo-jdk17</module>
     </modules>
 
 </project>
