@@ -18,9 +18,9 @@ import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class ZipUtils {
+public class ZipUtil {
 
-    private ZipUtils() {
+    private ZipUtil() {
         throw new UnsupportedOperationException("This is a util class");
     }
 
