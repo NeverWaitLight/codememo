@@ -31,7 +31,7 @@ public class ZipUtil {
             try (FileOutputStream fos = new FileOutputStream(path)) {
                 fos.write(pair.getOutputStream().toByteArray());
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ZipException(e);
             }
         });
     }
@@ -60,6 +60,27 @@ public class ZipUtil {
     public static class EntryStream {
         private String filename;
         private ByteArrayOutputStream outputStream;
+    }
+
+    public static class ZipException extends RuntimeException {
+        public ZipException() {
+        }
+
+        public ZipException(String message) {
+            super(message);
+        }
+
+        public ZipException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public ZipException(Throwable cause) {
+            super(cause);
+        }
+
+        public ZipException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+            super(message, cause, enableSuppression, writableStackTrace);
+        }
     }
 
 }
