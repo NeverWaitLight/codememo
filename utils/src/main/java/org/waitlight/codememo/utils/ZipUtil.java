@@ -25,18 +25,19 @@ public class ZipUtil {
     }
 
     public static void unzip(String zipPath, Charset charset, String destDir) throws IOException {
-        InputStream in = Files.newInputStream(Paths.get(zipPath));
-        unzip(in, charset, pair -> {
-            String path = destDir + File.separator + pair.getFilename();
-            try (FileOutputStream fos = new FileOutputStream(path)) {
-                fos.write(pair.getOutputStream().toByteArray());
-            } catch (IOException e) {
-                throw new ZipException(e);
-            }
-        });
+        try (InputStream in = Files.newInputStream(Paths.get(zipPath))) {
+            unzip(in, charset, entry -> {
+                String path = destDir + File.separator + entry.getFilename();
+                try (FileOutputStream fos = new FileOutputStream(path)) {
+                    fos.write(entry.getOutputStream().toByteArray());
+                } catch (IOException e) {
+                    throw new ZipException(e);
+                }
+            });
+        }
     }
 
-    public static void unzip(InputStream in, Charset charset, Consumer<EntryStream> consumer) throws IOException {
+    public static void unzip(InputStream in, Charset charset, Consumer<ZipStreamEntry> consumer) throws IOException {
         if (Objects.isNull(charset)) charset = StandardCharsets.UTF_8;
 
         try (ZipInputStream zin = new ZipInputStream(in, charset)) {
@@ -48,7 +49,7 @@ public class ZipUtil {
                     while ((len = zin.read(buffer)) > 0) {
                         out.write(buffer, 0, len);
                     }
-                    consumer.accept(new EntryStream(ze.getName(), out));
+                    consumer.accept(new ZipStreamEntry(ze.getName(), out));
                 }
             }
         }
@@ -57,7 +58,7 @@ public class ZipUtil {
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class EntryStream {
+    public static class ZipStreamEntry {
         private String filename;
         private ByteArrayOutputStream outputStream;
     }
