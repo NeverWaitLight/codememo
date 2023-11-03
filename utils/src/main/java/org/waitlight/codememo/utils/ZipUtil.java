@@ -27,9 +27,9 @@ public class ZipUtil {
     public static void unzip(String zipPath, Charset charset, String destDir) throws IOException {
         InputStream in = Files.newInputStream(Paths.get(zipPath));
         unzip(in, charset, pair -> {
-            String path = destDir + File.separator + pair.getName();
+            String path = destDir + File.separator + pair.getFilename();
             try (FileOutputStream fos = new FileOutputStream(path)) {
-                fos.write(pair.getOs().toByteArray());
+                fos.write(pair.getOutputStream().toByteArray());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -42,13 +42,14 @@ public class ZipUtil {
         try (ZipInputStream zin = new ZipInputStream(in, charset)) {
             ZipEntry ze;
             while (Objects.nonNull(ze = zin.getNextEntry())) {
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                int len;
-                byte[] buffer = new byte[1024];
-                while ((len = zin.read(buffer)) > 0) {
-                    out.write(buffer, 0, len);
+                try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                    int len;
+                    byte[] buffer = new byte[1024];
+                    while ((len = zin.read(buffer)) > 0) {
+                        out.write(buffer, 0, len);
+                    }
+                    consumer.accept(new EntryStream(ze.getName(), out));
                 }
-                consumer.accept(new EntryStream(ze.getName(), out));
             }
         }
     }
@@ -57,8 +58,8 @@ public class ZipUtil {
     @Setter
     @AllArgsConstructor
     public static class EntryStream {
-        private String name;
-        private ByteArrayOutputStream os;
+        private String filename;
+        private ByteArrayOutputStream outputStream;
     }
 
 }
