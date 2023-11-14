@@ -3,6 +3,7 @@ package org.waitlight.codememo.utils;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.lang.ref.SoftReference;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -16,5 +17,11 @@ class ZipUtilTest {
     @Test
     void unzip_win() throws IOException {
         ZipUtil.unzip("C://Users/10963/Pictures/test-win.zip", Charset.forName("GBK"), "C://Users/10963/Pictures/extra");
+        Object o = new Object();
+        SoftReference<Object> r = new SoftReference<>(o);
+        if (r.isEnqueued()) {
+
+        }
+        r.get();
     }
 }
