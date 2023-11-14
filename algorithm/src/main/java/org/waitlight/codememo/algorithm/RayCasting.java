@@ -6,6 +6,8 @@ import static java.lang.Math.min;
 /**
  * <a href="https://rosettacode.org/wiki/Ray-casting_algorithm">...</a>
  * <a href="http://philliplemons.com/posts/ray-casting-algorithm">...</a>
+ * <p>
+ * 大量多边形使用射线法求解，可以使用<a href="https://www.cnblogs.com/LBSer/p/4471742.html"> R </a> 树优化效率
  */
 public class RayCasting {
 
