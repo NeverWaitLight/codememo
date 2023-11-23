@@ -7,6 +7,6 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public interface UserRepository extends ReactiveMongoRepository<User, String> {
-    @Query("{'name': ?0}")
+    @Query("{'name': {$regex: ?0,$options: 'i'}}")
     Flux<User> findByName(String name);
 }
