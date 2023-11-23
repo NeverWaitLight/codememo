@@ -17,6 +17,7 @@
         <module>design-pattern-demo</module>
         <module>local-server</module>
         <module>algorithm</module>
+        <module>webflux-demo</module>
     </modules>
 
 </project>
