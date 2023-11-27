@@ -1,4 +1,4 @@
-package org.waitlight.codememo.algorithm;
+package org.waitlight.codememo.simpledemo;
 
 public class Polygon implements Shape {
     public Point[] points;

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>webflx-demo</artifactId>
+    <artifactId>webflux-demo</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

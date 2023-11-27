@@ -1,4 +1,4 @@
-package org.waitlight.codememo.algorithm;
+package org.waitlight.codememo.simpledemo;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;

@@ -18,6 +18,7 @@
         <module>local-server</module>
         <module>algorithm</module>
         <module>webflux-demo</module>
+        <module>simple-demo</module>
     </modules>
 
 </project>
