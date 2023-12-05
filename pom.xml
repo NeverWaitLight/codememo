@@ -19,6 +19,7 @@
         <module>algorithm</module>
         <module>webflux-demo</module>
         <module>simple-demo</module>
+        <module>proxy-demo</module>
     </modules>
 
 </project>
