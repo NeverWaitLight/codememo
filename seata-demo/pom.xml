@@ -20,6 +20,7 @@
         <module>seata-xa</module>
         <module>seata-at</module>
         <module>seata-tcc</module>
+        <module>seata-saga</module>
     </modules>
 
     <properties>

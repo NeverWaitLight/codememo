@@ -1,8 +1,5 @@
 package org.waitlight.codememo.seata.tcc.business.controller;
 
-import org.waitlight.codememo.seata.tcc.business.client.OrderClient;
-import org.waitlight.codememo.seata.tcc.business.client.StorageClient;
-import org.waitlight.codememo.seata.tcc.business.client.WalletClient;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.example.xa.commons.Ordering;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.waitlight.codememo.seata.tcc.business.client.OrderClient;
+import org.waitlight.codememo.seata.tcc.business.client.StorageClient;
+import org.waitlight.codememo.seata.tcc.business.client.WalletClient;
 
 import java.util.concurrent.ThreadLocalRandom;
 

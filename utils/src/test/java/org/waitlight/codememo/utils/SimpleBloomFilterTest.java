@@ -1,7 +1,6 @@
 package org.waitlight.codememo.utils;
 
 import org.junit.jupiter.api.Test;
-import org.waitlight.codememo.utils.SimpleBloomFilter;
 
 import java.security.NoSuchAlgorithmException;
 

@@ -1,7 +1,7 @@
 package org.waitlight.codememo.seata.tcc.storage.repository;
 
-import org.waitlight.codememo.seata.tcc.storage.model.ProductFreezeLog;
 import org.springframework.data.repository.CrudRepository;
+import org.waitlight.codememo.seata.tcc.storage.model.ProductFreezeLog;
 
 import java.util.Optional;
 

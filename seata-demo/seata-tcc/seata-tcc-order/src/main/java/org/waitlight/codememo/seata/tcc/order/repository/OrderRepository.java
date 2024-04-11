@@ -1,8 +1,8 @@
 package org.waitlight.codememo.seata.tcc.order.repository;
 
 
-import org.waitlight.codememo.seata.tcc.order.model.Order;
 import org.springframework.data.repository.CrudRepository;
+import org.waitlight.codememo.seata.tcc.order.model.Order;
 
 import java.util.Optional;
 

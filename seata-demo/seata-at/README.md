@@ -1,4 +1,10 @@
-# AT demo
+# AT Doc
+
+> [Seata AT 模式](https://seata.apache.org/zh-cn/docs/dev/mode/at-mode/)
+
+AT 模式是 [Seata](https://seata.apache.org) 独有的模式，属于**两阶段提交（2PC）**
+
+# Steps
 
 ## Docker network
 
@@ -37,10 +43,10 @@ docker run --name nacos -e MODE=standalone -p 8848:8848 -p 9848:9848 -p 9849:984
 
 ```bash
 docker pull seataio/seata-server:1.5.1
-docker run --name seata -p 8091:8091 -p 7091:7091 -e SEATA_IP=your-intranet-ip --network test -d seataio/seata-server:1.5.1 
+docker run --name seata -p 8091:8091 -p 7091:7091 -e SEATA_IP=your-intranet-ip --network test -d seataio/seata-server:1.5.1
 ```
 
-使用你的内网IP替换`your-intranet-ip` 之后再执行 `docker run` 命令
+使用你的内网 IP 替换`your-intranet-ip` 之后再执行 `docker run` 命令
 
 seata-server 使用 seata-server/resources/application.yml 配置，修改或添加 application.yml 中包含的如下配置：
 

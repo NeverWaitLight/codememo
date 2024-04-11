@@ -1,10 +1,10 @@
 package org.waitlight.codememo.seata.tcc.wallet.action;
 
-import org.waitlight.codememo.seata.tcc.wallet.model.Balance;
 import io.seata.rm.tcc.TwoPhaseResult;
 import io.seata.rm.tcc.api.BusinessActionContext;
 import io.seata.rm.tcc.api.LocalTCC;
 import io.seata.rm.tcc.api.TwoPhaseBusinessAction;
+import org.waitlight.codememo.seata.tcc.wallet.model.Balance;
 
 import java.math.BigDecimal;
 

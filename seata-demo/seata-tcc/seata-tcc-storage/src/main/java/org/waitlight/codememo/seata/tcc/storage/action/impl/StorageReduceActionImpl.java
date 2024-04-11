@@ -1,15 +1,15 @@
 package org.waitlight.codememo.seata.tcc.storage.action.impl;
 
-import org.waitlight.codememo.seata.tcc.storage.action.StorageReduceAction;
-import org.waitlight.codememo.seata.tcc.storage.model.Product;
-import org.waitlight.codememo.seata.tcc.storage.model.ProductFreezeLog;
-import org.waitlight.codememo.seata.tcc.storage.repository.ProductFreezeLogRepository;
-import org.waitlight.codememo.seata.tcc.storage.repository.ProductRepository;
 import io.seata.rm.tcc.TwoPhaseResult;
 import io.seata.rm.tcc.api.BusinessActionContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.waitlight.codememo.seata.tcc.storage.action.StorageReduceAction;
+import org.waitlight.codememo.seata.tcc.storage.model.Product;
+import org.waitlight.codememo.seata.tcc.storage.model.ProductFreezeLog;
+import org.waitlight.codememo.seata.tcc.storage.repository.ProductFreezeLogRepository;
+import org.waitlight.codememo.seata.tcc.storage.repository.ProductRepository;
 
 @Slf4j
 @Component

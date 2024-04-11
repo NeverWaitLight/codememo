@@ -1,7 +1,7 @@
 package org.waitlight.codememo.seata.xa.wallet.repository;
 
-import org.waitlight.codememo.seata.xa.wallet.model.Balance;
 import org.springframework.data.repository.CrudRepository;
+import org.waitlight.codememo.seata.xa.wallet.model.Balance;
 
 import java.util.Optional;
 

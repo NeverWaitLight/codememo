@@ -1,3 +1,7 @@
+# XA Docs
+
+全局只有一个事务
+
 # XA demo
 
 ## Docker network
@@ -11,7 +15,7 @@ docker network create test
 ## MySQL
 
 > [MySQL 5.0 开始支持 XA 事务](https://dev.mysql.com/blog-archive/improvements-to-xa-support-in-mysql-5-7/#:~:text=XA%20stands%20for%20%E2%80%9CeXtended%20Architecture,increased%20overall%20test%2Dcase%20coverage.)
- 
+
 用作 seata-server 的存储，方便调试出错时清除数据。
 
 ```bash
