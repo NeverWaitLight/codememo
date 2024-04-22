@@ -6,6 +6,7 @@ import org.waitlight.codememo.simpledemo.NamedThreadFactory;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -145,6 +146,8 @@ public class HashExecutorService implements SequentialAsyncService<Integer, Void
     }
 
     public static void main(String[] args) {
+        BitSet bitSet = new BitSet();
+        bitSet.set(1, true);
         int total = 200;
 
         ThreadPoolExecutor producer = new ThreadPoolExecutor(
