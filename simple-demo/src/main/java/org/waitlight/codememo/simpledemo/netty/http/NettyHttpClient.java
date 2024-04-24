@@ -1,4 +1,4 @@
-package org.waitlight.codememo.simpledemo;
+package org.waitlight.codememo.simpledemo.netty.http;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
