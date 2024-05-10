@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 public class CGLibProxy {
     /**
-     * VM Option 添加 "--add-opens java.base/java.lang=ALL-UNNAMED" 这将允许 CGLib 访问 java.lang.ClassLoader.defineClass 方法
+     * VM Option 添加 "--add-opens java.base/java.lang=ALL-UNNAMED" 这将允许 CGLib 访问 java.lang.ClassLoader.defineClass 方法
      *
      * @param args
      */
